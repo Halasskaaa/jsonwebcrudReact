@@ -8,7 +8,7 @@ function App() {
 
   const [nev, setNev] = useState<string>("")
   const [osztaly, setOsztaly] = useState<string>("")
-  const [kredit, setKredit] = useState<string>("")
+  const [kredit, setKredit] = useState<number>(0)
   const [tankoteles, setTankoteles] = useState<string>("")
 
   useEffect(() => {
@@ -28,7 +28,9 @@ function App() {
     e.preventDefault();
     const ujFelhasznalo = {
       nev: nev,
-      osztaly: osztaly
+      osztaly: osztaly,
+      kredit: kredit,
+      tankoteles: tankoteles
     }
     try {
       const response = await fetch("http://localhost:3000/users", {
@@ -159,9 +161,9 @@ function App() {
               <td>{user.tankoteles ? "Tanköteles" : "Nem tanköteles"}</td>
               <td>
                 <button className="btn btn-danger" onClick={() => handleTorles(user.id.toString())}>❌</button>
-                <button className="btn" onClick={() => handleCreditUp(user)}>+1000</button>
-                <button className="btn" onClick={() => handleCreditDown(user)}>-1000</button>
-                <button className="btn" onClick={() => handleCreditZero(user)}>0</button>
+                <button className="btn btn-info" onClick={() => handleCreditUp(user)}>+1000</button>
+                <button className="btn btn-info" onClick={() => handleCreditDown(user)}>-1000</button>
+                <button className="btn btn-info" onClick={() => handleCreditZero(user)}>Nullázás</button>
               </td>
             </tr>
           ))}
@@ -169,10 +171,10 @@ function App() {
       </table>
 
       <h2>Felhasználók felvétele</h2>
-      <form onSubmit={handleFelhasznaloFelvetel}>
+      <form className="form form-control" onSubmit={handleFelhasznaloFelvetel}>
         <label htmlFor="input_nev">
           Add meg a neved: <br />
-          <input
+          <input className="form-control"
             id="input_nev"
             type="text"
             value={nev}
@@ -182,7 +184,7 @@ function App() {
         <br />
         <label htmlFor="input_osztaly">
           Add meg a oszályod: <br />
-          <input
+          <input className="form-control"
             id="input_osztaly"
             type="text"
             value={osztaly}
@@ -192,25 +194,25 @@ function App() {
         <br />
         <label htmlFor="input_kredit">
           Add meg a kredited: <br />
-          <input
+          <input className="form-control"
             id="input_kredit"
             type="number"
             value={kredit}
-            onChange={(e) => setKredit(e.target.value)} />
+            onChange={(e) => setKredit(parseInt(e.target.value)||0)} />
           <br />
         </label>
         <br />
         <label htmlFor="input_tankoteles">
           Tanköteles vagy-e: <br />
-          <select name="input_tankoteles" id="input_tankoteles" onChange={(e) => setTankoteles(e.target.value)}>
-            <option value={tankoteles}>Nem</option>
-            <option value={tankoteles}>Igen</option>
+          <select className="form-control" value={tankoteles} name="input_tankoteles" id="input_tankoteles" onChange={(e) => setTankoteles(e.target.value)}>
+            <option value="false">Nem</option>
+            <option value="true">Igen</option>
           </select>
           <br />
         </label>
         <br />
 
-        <button type="submit">Felvétel</button>
+        <button className="btn btn-warning" type="submit">Felvétel</button>
       </form>
     </>
   )
