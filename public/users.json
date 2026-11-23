@@ -3,11 +3,15 @@
     {
       "nev": "Nagy Katalin",
       "osztaly": "11.D",
+      "kredit": 500,
+      "tankoteles": false,
       "id": "FmKJJOC5d4c"
     },
     {
       "nev": "Molnár Ákos",
       "osztaly": "9.D",
+      "kredit": 1000,
+      "tankoteles": true,
       "id": "CqutnqGSGkE"
     }
   ],
