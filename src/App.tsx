@@ -198,6 +198,7 @@ function App() {
             id="input_kredit"
             type="number"
             value={kredit}
+            min={0} required
             onChange={(e) => setKredit(parseInt(e.target.value)||0)} />
           <br />
         </label>
@@ -221,3 +222,13 @@ function App() {
 export default App
 
 // npm install json-server -D
+
+// Feldadat leírások:
+// {/* Kredit - 1000 */}✅
+// {/* Kredit => nullázás */}✅
+// {/* Kredit => ne engedje minuszba menni a kreditet! */}
+             
+// {/* tanköteles mező váltása */}
+ 
+// {/* Kredit => input mezőben megadott értékre módosít (megjelenés, elrejtés) */}
+// {/* tanköteles mező váltása: 18 fölött engedje csak false-ra állítani (users.json módosítása) */}
