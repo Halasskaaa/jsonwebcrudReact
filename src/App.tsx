@@ -72,7 +72,7 @@ function App() {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/users" + user.id, {
+      const response = await fetch("http://localhost:3000/users/" + user.id, {
         method: "PATCH",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({kredit: user.kredit + 1000}),
@@ -95,7 +95,7 @@ function App() {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/users" + user.id, {
+      const response = await fetch("http://localhost:3000/users/" + user.id, {
         method: "PATCH",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({kredit: user.kredit - 1000}),
@@ -118,7 +118,7 @@ function App() {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/users" + user.id, {
+      const response = await fetch("http://localhost:3000/users/" + user.id, {
         method: "PATCH",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({kredit: 0}),
