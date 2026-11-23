@@ -8,6 +8,8 @@ function App() {
 
   const [nev, setNev] = useState<string>("")
   const [osztaly, setOsztaly] = useState<string>("")
+  const [kredit, setKredit] = useState<string>("")
+  const [tankoteles, setTankoteles] = useState<string>("")
 
   useEffect(() => {
     async function fetchUsers() {
@@ -73,13 +75,13 @@ function App() {
       const response = await fetch("http://localhost:3000/users" + user.id, {
         method: "PATCH",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify({kredit: user.kredit + 1000})
+        body: JSON.stringify({kredit: user.kredit + 1000}),
       });
       if (!response.ok) {
         throw new Error("A kredit emelés nem sikerült."); 
       }
       setUsers((elozo) =>
-        elozo.map(u =>
+        elozo.map((u) =>
           u.id === user.id ? {...u, kredit: user.kredit+1000} : u,
         )
       );
@@ -96,14 +98,37 @@ function App() {
       const response = await fetch("http://localhost:3000/users" + user.id, {
         method: "PATCH",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify({kredit: user.kredit - 1000})
+        body: JSON.stringify({kredit: user.kredit - 1000}),
       });
       if (!response.ok) {
         throw new Error("A kredit csökkentés nem sikerült."); 
       }
       setUsers((elozo) =>
-        elozo.map(u =>
+        elozo.map((u) =>
           u.id === user.id ? {...u, kredit: user.kredit-1000} : u,
+        )
+      );
+    } catch (error) {
+      console.log("Hiba" + error.message)
+    }
+  }
+
+    async function handleCreditZero(user: User) {
+    if (!confirm("Biztosan szeretnéd 1000-el csökkenteni  " + user.nev + " osztálypénzét?")) {
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:3000/users" + user.id, {
+        method: "PATCH",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({kredit: 0}),
+      });
+      if (!response.ok) {
+        throw new Error("A kredit nullázás nem sikerült."); 
+      }
+      setUsers((elozo) =>
+        elozo.map((u) =>
+          u.id === user.id ? {...u, kredit: 0} : u,
         )
       );
     } catch (error) {
@@ -136,6 +161,7 @@ function App() {
                 <button className="btn btn-danger" onClick={() => handleTorles(user.id.toString())}>❌</button>
                 <button className="btn" onClick={() => handleCreditUp(user)}>+1000</button>
                 <button className="btn" onClick={() => handleCreditDown(user)}>-1000</button>
+                <button className="btn" onClick={() => handleCreditZero(user)}>0</button>
               </td>
             </tr>
           ))}
@@ -164,6 +190,26 @@ function App() {
           <br />
         </label>
         <br />
+        <label htmlFor="input_kredit">
+          Add meg a kredited: <br />
+          <input
+            id="input_kredit"
+            type="number"
+            value={kredit}
+            onChange={(e) => setKredit(e.target.value)} />
+          <br />
+        </label>
+        <br />
+        <label htmlFor="input_tankoteles">
+          Tanköteles vagy-e: <br />
+          <select name="input_tankoteles" id="input_tankoteles" onChange={(e) => setTankoteles(e.target.value)}>
+            <option value={tankoteles}>Nem</option>
+            <option value={tankoteles}>Igen</option>
+          </select>
+          <br />
+        </label>
+        <br />
+
         <button type="submit">Felvétel</button>
       </form>
     </>
