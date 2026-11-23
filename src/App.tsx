@@ -15,8 +15,8 @@ function App() {
         const response = await fetch("http://localhost:3000/users");
         const data: User[] = await response.json();
         setUsers(data)
-      } catch(err) {
-        console.log("Hiba történt: " + err.message);
+      } catch(error) {
+        console.log("Hiba történt: " + error.message);
       }
     }
     fetchUsers();
@@ -38,8 +38,22 @@ function App() {
       setUsers((elozo)=>[...elozo, felhasznalo]);
       setNev("");
       setOsztaly("");
-    } catch (err){
-      console.log("Hiba történt felvételnél: " + err.message)
+    } catch (error){
+      console.log("Hiba történt felvételnél: " + error.message)
+    }
+  }
+
+  async function handleTorles(id: string) {
+    if(!confirm("Biztosan szeretnéd törölni ezt a felhasználót?")) {
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:3000/users/" + id, {
+        method: "DELETE"
+      }) 
+      setUsers((elozo)=> elozo.filter((user)=> user.id.toString()!==id))
+    } catch (error) {
+
     }
   }
 
@@ -59,6 +73,9 @@ function App() {
           <tr key={user.id}>
             <td>{user.nev}</td>
             <td>{user.osztaly}</td>
+            <td>
+              <button className="btn btn-danger" onClick={()=> handleTorles(user.id.toString())}>❌</button>
+            </td>
           </tr>
         ))}
       </tbody>
