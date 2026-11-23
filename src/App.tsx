@@ -34,6 +34,10 @@ function App() {
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(ujFelhasznalo)
       });
+      if (!response.ok) {
+        throw new Error("A felvétel nem sikerült.");
+        
+      }
       const felhasznalo: User = await response.json();
       setUsers((elozo) => [...elozo, felhasznalo]);
       setNev("");
@@ -51,8 +55,12 @@ function App() {
       const response = await fetch("http://localhost:3000/users/" + id, {
         method: "DELETE"
       })
+      if (!response.ok) {
+        throw new Error("A törlés nem működik.");      
+      }
       setUsers((elozo) => elozo.filter((user) => user.id.toString() !== id))
     } catch (error) {
+      console.log("Hiba" + error.message)
 
     }
   }
@@ -63,19 +71,46 @@ function App() {
     }
     try {
       const response = await fetch("http://localhost:3000/users" + user.id, {
-        "method": "PATCH",
+        method: "PATCH",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify(user.kredit + 1000)
+        body: JSON.stringify({kredit: user.kredit + 1000})
       });
+      if (!response.ok) {
+        throw new Error("A kredit emelés nem sikerült."); 
+      }
       setUsers((elozo) =>
         elozo.map(u =>
           u.id === user.id ? {...u, kredit: user.kredit+1000} : u,
         )
       );
     } catch (error) {
-
+      console.log("Hiba" + error.message)
     }
   }
+
+    async function handleCreditDown(user: User) {
+    if (!confirm("Biztosan szeretnéd 1000-el csökkenteni  " + user.nev + " osztálypénzét?")) {
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:3000/users" + user.id, {
+        method: "PATCH",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({kredit: user.kredit - 1000})
+      });
+      if (!response.ok) {
+        throw new Error("A kredit csökkentés nem sikerült."); 
+      }
+      setUsers((elozo) =>
+        elozo.map(u =>
+          u.id === user.id ? {...u, kredit: user.kredit-1000} : u,
+        )
+      );
+    } catch (error) {
+      console.log("Hiba" + error.message)
+    }
+  }
+  
   return (
     <>
       <h1>Felhasználók</h1>
@@ -100,6 +135,7 @@ function App() {
               <td>
                 <button className="btn btn-danger" onClick={() => handleTorles(user.id.toString())}>❌</button>
                 <button className="btn" onClick={() => handleCreditUp(user)}>+1000</button>
+                <button className="btn" onClick={() => handleCreditDown(user)}>-1000</button>
               </td>
             </tr>
           ))}
